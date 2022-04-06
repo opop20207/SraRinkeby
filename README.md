@@ -7,12 +7,12 @@ Author jeon sung yoon
 
 Run on Rinkeby<br/>
 using django<br/>
-please run this project on virtual environment<br/>
+please run this project on virtual environment<br/><br/>
 
 ## how to execute
 (0) you should have python3, pip3 in your environment
 
-<br/><br/><br/>
+<br/><br/>
 (1) install virtualenv
 
 - pip3 install virtualenv
@@ -27,20 +27,20 @@ make virtual environment named venv
 
 activate your virtual environment named venv
 
-<br/><br/><br/>
+<br/><br/>
 (2) download package by requirements.txt
 
 - pip3 install -r requirements.txt
 
-this will install packages using in this project to your local repository
+install packages using in this project
 
-<br/><br/><br/>
+<br/><br/>
 (3) run!
 - ./manage.py runserver
 
 then you can run this project
 
-<br/><br/><br/>
+<br/><br/>
 (!) trobleshooting
 
 [1] The script virtualenv is installed in '/home/((username))/.local/bin' which is not on PATH.
