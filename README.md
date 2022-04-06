@@ -23,7 +23,14 @@ install virtualenv
 
 make virtual environment named venv
 
+for linux
+
 - source venv/bin/activate
+
+for window
+
+- venv/scripts/activate.bat
+
 
 activate your virtual environment named venv
 
