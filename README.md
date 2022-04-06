@@ -19,14 +19,6 @@ please run this project on virtual environment<br/>
 
 install virtualenv
 
-### if you get a warning : The script virtualenv is installed in '/home/((username))/.local/bin' which is not on PATH.
-
-- sudo vim ~/.bashrc
-
-add following line
-
-- "$PATH":/home/((username))/.local/bin
-
 - python3 -m venv venv
 
 make virtual environment named venv
@@ -47,3 +39,14 @@ this will install packages using in this project to your local repository
 - ./manage.py runserver
 
 then you can run this project
+
+<br/><br/><br/>
+(!) trobleshooting
+
+[1] The script virtualenv is installed in '/home/((username))/.local/bin' which is not on PATH.
+
+- sudo vim ~/.bashrc
+
+add following line
+
+- "$PATH":/home/((username))/.local/bin
