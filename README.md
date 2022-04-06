@@ -1,12 +1,5 @@
- ▄█▀███    ███▄░    ▒▒██    
- ▓█░ ▒ █░  ██░ ██   ▒██ ▀█░  
-▒░ ▓██▄   ▓██ ░▄█  ░████▀█░
- ▄▒   ██▒ ▒██▀▀█▄  ░██▒  ▐▌
-▒░█████▒▒▒░██▓ ▒█▄░██░  ░▓█▄▒
-░░ ▒▓ ░▒▓░ ▒▒▓  ▒    ░▓  ░ ▒░   
-░ ░░   ░ ▒░ ░ ░  ░░ ░▒ ░ ▒░ ░ ▒  
-   ░   ░ ░    ░     ░░   ░  ░ ░  ░
-         ░    ░  ░   ░        ░    
+![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=S%R%A%20render&fontSize=90)
+
  ** Skin minecRaft Assistance **
 Copyright (c) 2022 [ SRA TEAM ]
 
