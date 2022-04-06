@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=S%R%A%20render&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=300&section=header&text=SRA&fontSize=90&animation=twinkling&color=gradient&desc=Decorate%20GitHub%20Profile%20or%20any%20Repo%20like%20me!)
 
  ** Skin minecRaft Assistance **
 Copyright (c) 2022 [ SRA TEAM ]
