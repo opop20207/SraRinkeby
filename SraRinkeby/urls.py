@@ -19,7 +19,7 @@ from home import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('home.urls')),
+    path('', views.home),
     path('flea/', views.flea),
     path('login/',views.login)
 ]
