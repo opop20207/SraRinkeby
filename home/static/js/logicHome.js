@@ -1,5 +1,10 @@
-Moralis.initialize("xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ"); // Application id from moralis.io
-Moralis.serverURL = "https://k4lt9sbz1oni.usemoralis.com:2053/server"; //Server url from moralis.io
+appId = "xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ"
+serverUrl = "https://k4lt9sbz1oni.usemoralis.com:2053/server";
+plugins = "None";
+options = { appId, serverUrl, plugins };
+
+Moralis.initialize(appId); // Application id from moralis.io
+Moralis.serverURL = serverUrl; //Server url from moralis.io
 
 const nft_contract_address = "0x3d05364012a5f131e3a32a68deba6c23041fb917" //NFT Minting Contract Use This One "Batteries Included", code of this contract is in the github repository under contract_base for your reference.
 /*
@@ -13,52 +18,56 @@ const web3 = new Web3(window.ethereum);
 
 //frontend logic
 
-async function login(){
-  appId = "xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ"
-  serverUrl = "https://k4lt9sbz1oni.usemoralis.com:2053/server";
-  plugins = "None";
-  options = { appId, serverUrl, plugins };
+async function checkAuth(){
+  const isLoggedIn = await ParseUser.currentAsync();
+  return isLoggedIn;
+}
 
+async function login(){
   Moralis.start(options);
   Moralis.Web3.authenticate().then(function (user) {
-      user.set("userAddress", ethereum.selectedAddress);
-      user.save();
-      document.getElementById("upload").removeAttribute("disabled");
-      document.getElementById("file").removeAttribute("disabled");
-      document.getElementById("name").removeAttribute("disabled");
-      document.getElementById("description").removeAttribute("disabled");
-  })
+    user.set("userAddress", ethereum.selectedAddress);
+    user.save();
+    document.getElementById("upload").removeAttribute("disabled");
+    document.getElementById("file").removeAttribute("disabled");
+    document.getElementById("name").removeAttribute("disabled");
+    document.getElementById("description").removeAttribute("disabled");
+  });
 }
 
 async function upload(){
-  const fileInput = document.getElementById("file");
-  const data = fileInput.files[0];
-  const imageFile = new Moralis.File(data.name, data);
-  document.getElementById('upload').setAttribute("disabled", null);
-  document.getElementById('file').setAttribute("disabled", null);
-  document.getElementById('name').setAttribute("disabled", null);
-  document.getElementById('description').setAttribute("disabled", null);
-  await imageFile.saveIPFS();
-
-  const imageURI = imageFile.ipfs();
-  const metadata = {
-    "name":document.getElementById("name").value,
-    "description":document.getElementById("description").value,
-    "image":imageURI
+  if(!checkAuth()){
+    location.replace('/login');
+  }else{
+    const fileInput = document.getElementById("file");
+    const data = fileInput.files[0];
+    const imageFile = new Moralis.File(data.name, data);
+    document.getElementById('upload').setAttribute("disabled", null);
+    document.getElementById('file').setAttribute("disabled", null);
+    document.getElementById('name').setAttribute("disabled", null);
+    document.getElementById('description').setAttribute("disabled", null);
+    await imageFile.saveIPFS();
+  
+    const imageURI = imageFile.ipfs();
+    const metadata = {
+      "name":document.getElementById("name").value,
+      "description":document.getElementById("description").value,
+      "image":imageURI
+    }
+    console.log(" ** Image IPFS URI : ", imageURI, " **");
+    const metadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
+    await metadataFile.saveIPFS();
+  
+    const savedData = new Moralis.Object('NFTs');
+    savedData.set('name', document.getElementById("name").value);
+    savedData.set('description', document.getElementById("description").value);
+    savedData.set('image', imageURI);
+    savedData.set('owner_of', ethereum.selectedAddress);
+    await savedData.save();
+  
+    const metadataURI = metadataFile.ipfs();
+    const txt = await mintToken(metadataURI).then(notify)
   }
-  console.log(" ** Image IPFS URI : ", imageURI, " **");
-  const metadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
-  await metadataFile.saveIPFS();
-
-  const savedData = new Moralis.Object('NFTs');
-  savedData.set('name', document.getElementById("name").value);
-  savedData.set('description', document.getElementById("description").value);
-  savedData.set('image', imageURI);
-  savedData.set('owner_of', ethereum.selectedAddress);
-  await savedData.save();
-
-  const metadataURI = metadataFile.ipfs();
-  const txt = await mintToken(metadataURI).then(notify)
 }
 
 async function mintToken(_uri){

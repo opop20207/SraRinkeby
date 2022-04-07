@@ -7,3 +7,6 @@ def home(request):
 
 def flea(request):
     return render(request, '../templates/flea.html')
+
+def login(request):
+    return render(request, '../templates/login.html')

@@ -1,0 +1,26 @@
+{% extends "baseTemplate.html" %}
+{% block title %}SRA TESTING{% endblock %}
+{% block head%}
+{% endblock %}
+{% block main %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Login Page</h1>
+      <hr>
+      <div class="mb-3">      
+        <div>  
+            <button disabled = "true" class="btn btn-primary" id="loginMetamask" onclick="loginMetamask();">MetaMask</button>
+        </div>
+      </div>  
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block script %}
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+  <script src="../static/js/logicLogin.js"></script>
+{% endblock %}
