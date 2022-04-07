@@ -5,5 +5,5 @@ from django.utils import timezone
 
 class Review(models.Model):
     title = models.CharField(max_length=50)
-    conten = models.TextField()
+    content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
