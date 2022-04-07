@@ -14,6 +14,7 @@ def home(request):
 def flea(request):
     return render(request, '../templates/flea.html')
 
+<<<<<<< HEAD
 class ReviewList(APIView):
     def get(self, request):
         reviews = Review.objects.all()
@@ -55,3 +56,7 @@ class ReviewDetail(APIView):
         review = self.get_object(pk)
         review.delete()
         return Response(status = status.HTTP_201_CREATED)
+=======
+def login(request):
+    return render(request, '../templates/login.html')
+>>>>>>> 4560d295481588c849c4e3d87590a9437eb01689
