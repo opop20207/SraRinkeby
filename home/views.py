@@ -14,7 +14,7 @@ def home(request):
 def flea(request):
     return render(request, '../templates/flea.html')
 
-<<<<<<< HEAD
+
 class ReviewList(APIView):
     def get(self, request):
         reviews = Review.objects.all()
