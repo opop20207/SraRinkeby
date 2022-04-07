@@ -15,12 +15,15 @@ BSC Testnet 0x88624DD1c725C6A95E223170fa99ddB22E1C6DDD
 */
 
 const web3 = new Web3(window.ethereum);
+isUserLoggedIn();
 
 //frontend logic
 async function isUserLoggedIn() {
-    const currentUser = Moralis.User.current();
-    if (currentUser) return true;
-    else return false;
+    web3.eth.getAccounts(function(err, accounts){
+      if (err != null) console.error("An error occurred: "+err);
+      else if (accounts.length == 0) console.log("User is not logged in to MetaMask");
+      else console.log("User is logged in to MetaMask");
+  });
 }
 
 async function login() {
