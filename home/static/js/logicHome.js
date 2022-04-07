@@ -1,4 +1,4 @@
-appId = "xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ"
+appId = "xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ";
 serverUrl = "https://k4lt9sbz1oni.usemoralis.com:2053/server";
 plugins = "None";
 options = { appId, serverUrl, plugins };
@@ -6,7 +6,7 @@ options = { appId, serverUrl, plugins };
 Moralis.initialize(appId); // Application id from moralis.io
 Moralis.serverURL = serverUrl; //Server url from moralis.io
 
-const nft_contract_address = "0x3d05364012a5f131e3a32a68deba6c23041fb917" //NFT Minting Contract Use This One "Batteries Included", code of this contract is in the github repository under contract_base for your reference.
+const nft_contract_address = "0x3d05364012a5f131e3a32a68deba6c23041fb917"; //NFT Minting Contract Use This One "Batteries Included", code of this contract is in the github repository under contract_base for your reference.
 /*
 Available deployed contracts
 Ethereum Rinkeby 0x0Fb6EF3505b9c52Ed39595433a21aF9B5FCc4431
@@ -17,82 +17,85 @@ BSC Testnet 0x88624DD1c725C6A95E223170fa99ddB22E1C6DDD
 const web3 = new Web3(window.ethereum);
 
 //frontend logic
-
-async function checkAuth(){
-  const isLoggedIn = await ParseUser.currentAsync();
-  return isLoggedIn;
+async function isUserLoggedIn() {
+    const currentUser = Moralis.User.current();
+    if (currentUser) return true;
+    else return false;
 }
 
-async function login(){
-  Moralis.start(options);
-  Moralis.Web3.authenticate().then(function (user) {
-    user.set("userAddress", ethereum.selectedAddress);
-    user.save();
-    document.getElementById("upload").removeAttribute("disabled");
-    document.getElementById("file").removeAttribute("disabled");
-    document.getElementById("name").removeAttribute("disabled");
-    document.getElementById("description").removeAttribute("disabled");
-  });
+async function login() {
+    location.replace("/login");
 }
 
-async function upload(){
-  if(!checkAuth()){
-    location.replace('/login');
-  }else{
-    const fileInput = document.getElementById("file");
-    const data = fileInput.files[0];
-    const imageFile = new Moralis.File(data.name, data);
-    document.getElementById('upload').setAttribute("disabled", null);
-    document.getElementById('file').setAttribute("disabled", null);
-    document.getElementById('name').setAttribute("disabled", null);
-    document.getElementById('description').setAttribute("disabled", null);
-    await imageFile.saveIPFS();
-  
-    const imageURI = imageFile.ipfs();
-    const metadata = {
-      "name":document.getElementById("name").value,
-      "description":document.getElementById("description").value,
-      "image":imageURI
+async function upload() {
+    if (false) {
+        location.replace("/login");
+    } else {
+        const fileInput = document.getElementById("file");
+        const data = fileInput.files[0];
+        const imageFile = new Moralis.File(data.name, data);
+        document.getElementById("upload").setAttribute("disabled", null);
+        document.getElementById("file").setAttribute("disabled", null);
+        document.getElementById("name").setAttribute("disabled", null);
+        document.getElementById("description").setAttribute("disabled", null);
+        await imageFile.saveIPFS();
+
+        const imageURI = imageFile.ipfs();
+        const metadata = {
+            name: document.getElementById("name").value,
+            description: document.getElementById("description").value,
+            image: imageURI,
+        };
+        console.log(" ** Image IPFS URI : ", imageURI, " **");
+        const metadataFile = new Moralis.File("metadata.json", {
+            base64: btoa(JSON.stringify(metadata)),
+        });
+        await metadataFile.saveIPFS();
+
+        const savedData = new Moralis.Object("NFTs");
+        savedData.set("name", document.getElementById("name").value);
+        savedData.set(
+            "description",
+            document.getElementById("description").value
+        );
+        savedData.set("image", imageURI);
+        savedData.set("owner_of", ethereum.selectedAddress);
+        await savedData.save();
+
+        const metadataURI = metadataFile.ipfs();
+        const txt = await mintToken(metadataURI).then(notify);
     }
-    console.log(" ** Image IPFS URI : ", imageURI, " **");
-    const metadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
-    await metadataFile.saveIPFS();
-  
-    const savedData = new Moralis.Object('NFTs');
-    savedData.set('name', document.getElementById("name").value);
-    savedData.set('description', document.getElementById("description").value);
-    savedData.set('image', imageURI);
-    savedData.set('owner_of', ethereum.selectedAddress);
-    await savedData.save();
-  
-    const metadataURI = metadataFile.ipfs();
-    const txt = await mintToken(metadataURI).then(notify)
-  }
 }
 
-async function mintToken(_uri){
-  const encodedFunction = web3.eth.abi.encodeFunctionCall({
-    name: "mintToken",
-    type: "function",
-    inputs: [{
-      type: 'string',
-      name: 'tokenURI'
-      }]
-  }, [_uri]);
+async function mintToken(_uri) {
+    const encodedFunction = web3.eth.abi.encodeFunctionCall(
+        {
+            name: "mintToken",
+            type: "function",
+            inputs: [
+                {
+                    type: "string",
+                    name: "tokenURI",
+                },
+            ],
+        },
+        [_uri]
+    );
 
-  const transactionParameters = {
-    to: nft_contract_address,
-    from: ethereum.selectedAddress,
-    data: encodedFunction
-  };
-  const txt = await ethereum.request({
-    method: 'eth_sendTransaction',
-    params: [transactionParameters]
-  });
-  return txt
+    const transactionParameters = {
+        to: nft_contract_address,
+        from: ethereum.selectedAddress,
+        data: encodedFunction,
+    };
+    const txt = await ethereum.request({
+        method: "eth_sendTransaction",
+        params: [transactionParameters],
+    });
+    return txt;
 }
 
-async function notify(_txt){
-  document.getElementById("resultSpace").innerHTML =  
-  `<input disabled = "true" id="result" type="text" class="form-control" placeholder="Description" aria-label="URL" aria-describedby="basic-addon1" value="Your NFT was minted in transaction ${_txt}">`;
-} 
+async function notify(_txt) {
+    document.getElementById(
+        "resultSpace"
+    ).innerHTML = `<input disabled = "true" id="result" type="text" class="form-control" placeholder="Description" aria-label="URL" aria-describedby="basic-addon1" value="Your NFT was minted in transaction ${_txt}">`;
+}

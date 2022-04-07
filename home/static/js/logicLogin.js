@@ -1,4 +1,4 @@
-appId = "xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ"
+appId = "xdtQW4Rhkc0GvRzudL16sGGaO2fadoqESl8fkwIJ";
 serverUrl = "https://k4lt9sbz1oni.usemoralis.com:2053/server";
 plugins = "None";
 options = { appId, serverUrl, plugins };
@@ -10,10 +10,18 @@ const web3 = new Web3(window.ethereum);
 
 //frontend logic
 
-async function loginMetamask(){
-  Moralis.start(options);
-  Moralis.Web3.anthenticate().then(function (user){
-    user.set("userAddress", ethereum.selectedAddress);
-    user.save();
-  });
+async function isUserLoggedIn() {
+    const currentUser = Moralis.User.current();
+    if (currentUser) return true;
+    else return false;
+}
+
+async function loginMetamask() {
+    console.log();
+    Moralis.start(options);
+    Moralis.Web3.authenticate().then(function (user) {
+        user.set("userAddress", ethereum.selectedAddress);
+        user.save();
+        location.replace("/");
+    });
 }
